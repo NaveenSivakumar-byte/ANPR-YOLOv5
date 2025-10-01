@@ -17,3 +17,6 @@ OpenCV → Image preprocessing and manipulation
 Python → Core programming language
 
 Bootstrap / HTML / CSS / JS → Dashboard frontend
+
+# Demo Video
+[![Watch the video](https://img.youtube.com/vi/JFLc9Kwb_yg/0.jpg)](https://www.youtube.com/watch?v=JFLc9Kwb_yg)
