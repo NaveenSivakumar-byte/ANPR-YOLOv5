@@ -5,17 +5,11 @@ A dashboard interface is developed using Flask, enabling operators to capture ve
 
 
 - YOLOv5 → Vehicle and number plate detection
-
 - EasyOCR → Optical Character Recognition (OCR) for extracting plate numbers
-
 - Flask → Web framework for dashboard and system integration
-
 - MySQL → Database for storing vehicle history
-
 - OpenCV → Image preprocessing and manipulation
-
 - Python → Core programming language
-
 - Bootstrap / HTML / CSS / JS → Dashboard frontend
 
 # Demo Video
