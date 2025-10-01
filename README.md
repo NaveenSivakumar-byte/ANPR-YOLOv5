@@ -20,3 +20,21 @@ Bootstrap / HTML / CSS / JS → Dashboard frontend
 
 # Demo Video
 [![Watch the video](https://img.youtube.com/vi/JFLc9Kwb_yg/0.jpg)](https://www.youtube.com/watch?v=JFLc9Kwb_yg)
+
+# Setip & Installation
+1. Download Project Files
+- Click the Code → Download ZIP button on this repository.
+- Extract the ZIP file to your computer.
+
+2. Create and Activate Virtual Environment
+- Open a terminal inside the project folder and run:
+  python -m venv venv
+  .\venv\Scripts\activate
+
+3. Install Dependencies
+- With the virtual environment activated, run:
+  pip install -r requirements.txt
+
+4. Run the Project
+- Start the project with:
+  pyython app.py
