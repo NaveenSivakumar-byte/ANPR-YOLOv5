@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KL Mall Parking System</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Georgia, serif;
+      background-color: #ccc;
+      color: #000;
+    }
+
+    .navbar {
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar .title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-left: 15px;
+    }
+
+    .navbar .nav-right {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+    }
+
+    .navbar a {
+      color: white;
+      margin-left: 15px;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 1;
+      right: 0;
+      text-align: left;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 10px 15px;
+      text-decoration: none;
+      display: block;
+      font-size: 14px;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .main-content {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 5%;
+      text-align: center;
+    }
+
+    .main-content h1 {
+      color: #00008B;
+      font-size: 2.5rem;
+      margin: 10px 0;
+      text-shadow: 1px 1px 3px #ffffff;
+    }
+  
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="title">Kuala Lumpur Mall</div>
+    <span style="margin-left: 10px">Hi, {{ session['staff_id'] }}</span>
+  <div class="nav-right">
+  <a href="{{ url_for('home') }}">Home</a>
+  <div class="menu">
+    <a onclick="toggleDropdown()">Menu ▾</a>
+    <div class="dropdown-content" id="dropdown">
+      <a href="{{ url_for('recognize') }}">Recognize</a>
+      <a href="{{ url_for('history') }}">Vehicle History</a>
+    </div>
+  </div>
+  {% if session['staff_id'] %}
+    <a href="{{ url_for('logout') }}">Logout</a>
+  {% endif %}
+ </div>
+</div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Welcome To KL Mall’s</h1>
+    <h1>Parking Management System</h1>
+  </div>
+
+  <script>
+    function toggleDropdown() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    window.onclick = function (event) {
+      if (!event.target.matches('.menu > a')) {
+        const dropdown = document.getElementById("dropdown");
+        if (dropdown && dropdown.style.display === "block") {
+          dropdown.style.display = "none";
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

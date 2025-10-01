@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Detect Vehicle</title>
+  <style>
+     body {
+      margin: 0;
+      font-family: Georgia, serif;
+      background-color: #ccc;
+    }
+
+    .navbar {
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar .title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-left: 15px;
+    }
+
+    .navbar .nav-right {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+    }
+
+    .navbar a {
+      color: white;
+      margin-left: 15px;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 1;
+      right: 0;
+      text-align: left;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 10px 15px;
+      text-decoration: none;
+      display: block;
+      font-size: 14px;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .main-content {
+      padding: 40px 20px;
+      color: black;
+      text-align: center;
+    }
+
+    .main-content h1 {
+      color: #00008B;
+      font-size: 30px;
+      margin-top: 1%;
+      margin-bottom: 35px;
+    }
+
+    .form-section {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 50px;
+      flex-wrap: wrap;
+    }
+
+    .form-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+      max-width: 100%;
+    }
+
+    .form-left label {
+      font-weight: bold;
+    }
+
+    .form-left input[type="file"] {
+      cursor: pointer;
+      max-width: 100%;
+    }
+
+    .form-left .camera-row {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+
+    .form-left button[type="submit"] {
+      background-color: #00008B;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .image-preview {
+      background-color: #888;
+      width: 300px;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-preview img {
+      object-fit: contain;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .results {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .form-left img.camera-icon {
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="title">Kuala Lumpur Mall</div>
+    <div class="nav-right">
+      <a href="{{ url_for('home') }}">Home</a>
+      <div class="menu">
+        <a onclick="toggleDropdown()">Menu ▾</a>
+        <div class="dropdown-content" id="dropdown">
+          <a href="{{ url_for('recognize') }}">Recognize</a>
+          <a href="{{ url_for('history') }}">Vehicle History</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <h1>Recognition & Classification Page</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+      <div class="form-section">
+        <div class="form-left">
+          <label for="upload">Upload Picture</label>
+          <input type="file" name="image" accept="image/*" id="upload" onchange="previewImage(event)">
+
+          <div class="camera-row">
+            <label for="captureBtn">Capture Picture</label>
+            <input type="file" name="image" accept="image/*" capture="environment" id="captureInput" onchange="previewImage(event)" style="display:none;">
+            <img src="{{ url_for('static', filename='camera_icon.png') }}" alt="Capture" class="camera-icon" onclick="document.getElementById('captureInput').click()">
+          </div>
+
+          <button type="submit">RECOGNIZE</button>
+        </div>
+
+        <div class="form-right">
+          <div class="image-preview" id="previewBox">
+            {% if detected_filename %}
+              <img src="{{ url_for('static', filename='results/' + detected_filename) }}">
+            {% elif uploaded_filename %}
+              <img src="{{ url_for('static', filename='uploads/' + uploaded_filename) }}">
+            {% else %}
+              <span style="color: white;">No Image</span>
+            {% endif %}
+          </div>
+
+          <div class="results">
+            <p><strong>Number Plate:</strong> {{ plate or "N/A" }}</p>
+            <p><strong>Vehicle Type:</strong> {{ vehicle or "N/A" }}</p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+  function toggleDropdown() {
+    const dropdown = document.getElementById("dropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
+
+  window.onclick = function(event) {
+    if (!event.target.matches('.menu > a')) {
+      const dropdown = document.getElementById("dropdown");
+      if (dropdown && dropdown.style.display === "block") {
+        dropdown.style.display = "none";
+      }
+    }
+  }
+
+  function previewImage(event) {
+    const uploadInput = document.getElementById("upload");
+    const captureInput = document.getElementById("captureInput");
+    const previewBox = document.getElementById("previewBox");
+    previewBox.innerHTML = '';
+
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(event.target.files[0]);
+    img.onload = function () {
+      URL.revokeObjectURL(img.src);
+    }
+    previewBox.appendChild(img);
+
+    // ✅ Fix: ensure only one input is active as "image"
+    if (event.target.id === "upload") {
+      uploadInput.name = "image";
+      captureInput.name = "ignore_camera";
+    } else {
+      captureInput.name = "image";
+      uploadInput.name = "ignore_upload";
+    }
+  }
+</script>
+
