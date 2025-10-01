@@ -1,4 +1,4 @@
-# ANPR-YOLOv5
+# ANPR - YOLOv5 & OCR
 This project is my Final Year Project (FYP) titled “Sistem Pengecaman Plat Nombor Kenderaan dan Klasifikasi Kenderaan Menggunakan YOLOv5.” The system is designed to detect and localize Malaysian vehicle number plates and classify vehicle types (e.g., car, motorbike) using the YOLOv5 deep learning model. 
 
 A dashboard interface is developed using Flask, enabling operators to capture vehicle images, detect number plates, recognize vehicle types, and store entry/exit history.
